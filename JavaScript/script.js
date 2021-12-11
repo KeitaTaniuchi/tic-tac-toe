@@ -21,7 +21,5 @@ document.getElementById('players-name-add-btn').addEventListener('click', () => 
         document.getElementById("game-start-btn").style.display ='block';
         const playerAName = playerANameAdd.value;
         const playerBName = playerBNameAdd.value;
-        console.log(playerAName)
-        console.log(playerBName)
     }
 });
