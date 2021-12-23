@@ -17,28 +17,39 @@
 
         <form action="" id="players-name-add-form">
             <div class="row g-2">
-                <div class="col-sm my-3">
+                <div class="col my-3">
                     <input type="text" class="form-control" name="playerA-name" id="playerA-name"
                         placeholder="プレイヤーAの名前" aria-label="プレイヤーAの名前" value="谷内圭太">
                 </div>
-                <div class="col-sm my-3">
+                <div class="col my-3">
                     <input type="text" class="form-control" name="playerB-name" id="playerB-name"
                         placeholder="プレイヤーBの名前" aria-label="プレイヤーBの名前" value="谷内ななみ">
                 </div>
-                <button class="btn btn-outline-primary mx-2" id="game-start-btn" onclick="return false;">ゲーム開始</button>
+                <button class="btn btn-outline-primary" id="game-start-btn" onclick="return false;">ゲーム開始</button>
             </div>
         </form>
-    </div>
 
-    <div class="container" id="game-board">
-        <table class="table table-bordered"></table>
+        <div id="game-area">
+            <div class="row">
+                <p class="col" id="playerA-name-display"></p>
+                <p class="col" id="playerB-name-display"></p>
+            </div>
 
-        <div class="row">
-            <p class="col" id="playerA-name-display"></p>
-            <p class="col" id="playerB-name-display"></p>
+            <p id="turn-player-display"></p>
+
+            <table id="game-board"></table>
+
+            <p id="information"></p>
+
+            <div class="row" id="restart-btn-container">
+                    <div class="form-check col">
+                        <input class="form-check-input" type="checkbox" id="rename" name="rename" value="名前を変更する">
+                        <label class="form-check-label" for="rename">名前を変更する</label>
+                    </div>
+                
+                    <button class="btn btn-outline-primary" id="restart-btn">リスタート</button>
+            </div>
         </div>
-
-        <p id="turn-player-display"></p>
     </div>
 
     <script src="JavaScript/script.js"></script>
