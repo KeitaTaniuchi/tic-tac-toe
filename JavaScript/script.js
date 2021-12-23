@@ -3,8 +3,12 @@
 const gameBoard = document.getElementById('game-board');
 const turnPlayerDisplay = document.getElementById('turn-player-display');
 const information = document.getElementById('information');
+const rowXY = 3;
+const playFirstPlayerNum = 1;
+const playSecondPlayerNum = 10;
+let btnPushCounter = 0;
 
-const winnerDecisionArr = [
+let winnerDecisionMultiArr = [
     [0, 0, 0],
     [0, 0, 0],
     [0, 0, 0]
@@ -41,21 +45,24 @@ document.getElementById("game-start-btn").addEventListener('click', () => {
 const decidePlayFirst = (playerAName, playerBName) => {
     document.getElementById('players-name-add-form').style.display = 'none';
     document.getElementById('game-area').style.display = 'block';
+    winnerDecisionMultiArr = [
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0]
+    ];
 
     const players = [playerAName, playerBName];
     const playFirstPlayer = players[Math.floor(Math.random() * players.length)];
     const playSecondPlayer = players.find(n => n !== playFirstPlayer);
-    alert(`先行は${playFirstPlayer}様です。`);
 
-    document.getElementById('playerA-name-display').innerHTML = `${playFirstPlayer}様:O`;
-    document.getElementById('playerB-name-display').innerHTML = `${playSecondPlayer}様:X`;
+    document.getElementById('playerA-name-display').innerHTML = `${playFirstPlayer}様`;
+    document.getElementById('playerB-name-display').innerHTML = `${playSecondPlayer}様`;
     turnPlayerDisplay.innerHTML = `${playFirstPlayer}様のターンです。`;
     createBtn(playFirstPlayer, playSecondPlayer);
 };
 
 //セル内にボタンを作成する処理
 const createBtn = (playFirstPlayer, playSecondPlayer) => {
-    const rowXY = 3;
     let turnPlayer = playFirstPlayer;
 
     for (let i = 0; i < rowXY; i++) {
@@ -70,13 +77,12 @@ const createBtn = (playFirstPlayer, playSecondPlayer) => {
             td.appendChild(btn);
 
             btn.addEventListener('click', () => {
-                if (information.innerHTML.includes('勝利')) {
+                if (information.innerHTML.includes('勝利') || information.innerHTML.includes('引き分け')) {
                     return
 
                 } else if (btn.innerHTML === "O") {
                     information.innerHTML = `このマスは${playFirstPlayer}様が既に選択しています。`;
                     information.style.color = "red";
-
 
                 } else if (btn.innerHTML === "X") {
                     information.innerHTML = `このマスは${playSecondPlayer}様が既に選択しています。`;
@@ -89,7 +95,8 @@ const createBtn = (playFirstPlayer, playSecondPlayer) => {
                     btn.innerHTML = "O";
                     turnPlayer = playSecondPlayer;
                     turnPlayerDisplay.innerHTML = `${playSecondPlayer}様のターンです。`;
-                    winnerDecisionArr[i][j] = 1;
+                    winnerDecisionMultiArr[i][j] = playFirstPlayerNum;
+                    btnPushCounter++;
                     winnerDecision(playFirstPlayer, playSecondPlayer);
 
                 } else if (turnPlayer === playSecondPlayer) {
@@ -99,7 +106,8 @@ const createBtn = (playFirstPlayer, playSecondPlayer) => {
                     btn.innerHTML = "X";
                     turnPlayer = playFirstPlayer;
                     turnPlayerDisplay.innerHTML = `${playFirstPlayer}様のターンです。`;
-                    winnerDecisionArr[i][j] = 10;
+                    winnerDecisionMultiArr[i][j] = playSecondPlayerNum;
+                    btnPushCounter++;
                     winnerDecision(playFirstPlayer, playSecondPlayer);
                 }
             })
@@ -112,29 +120,36 @@ const winnerDecision = (playFirstPlayer, playSecondPlayer) => {
     let row1Sum = 0, row2Sum = 0, row3Sum = 0;
     let col1Sum = 0, col2Sum = 0, col3Sum = 0;
     let topLeftFromBottomRightSum = 0, topRightFromBottomLeftSum = 0;
+    let winnerDecisionArr = [row1Sum, row2Sum, row3Sum, col1Sum, col2Sum, col3Sum, topLeftFromBottomRightSum, topRightFromBottomLeftSum];
 
-    row1Sum = winnerDecisionArr[0].reduce((previousValue, currentValue) => previousValue + currentValue);
-    row2Sum = winnerDecisionArr[1].reduce((previousValue, currentValue) => previousValue + currentValue);
-    row3Sum = winnerDecisionArr[2].reduce((previousValue, currentValue) => previousValue + currentValue);
-    col1Sum = winnerDecisionArr[0][0] + winnerDecisionArr[1][0] + winnerDecisionArr[2][0];
-    col2Sum = winnerDecisionArr[0][1] + winnerDecisionArr[1][1] + winnerDecisionArr[2][1];
-    col3Sum = winnerDecisionArr[0][2] + winnerDecisionArr[1][2] + winnerDecisionArr[2][2];
-    topLeftFromBottomRightSum = winnerDecisionArr[0][0] + winnerDecisionArr[1][1] + winnerDecisionArr[2][2];
-    topRightFromBottomLeftSum = winnerDecisionArr[0][2] + winnerDecisionArr[1][1] + winnerDecisionArr[2][0];
+    winnerDecisionArr[0] = winnerDecisionMultiArr[0].reduce((previousValue, currentValue) => previousValue + currentValue);
+    winnerDecisionArr[1] = winnerDecisionMultiArr[1].reduce((previousValue, currentValue) => previousValue + currentValue);
+    winnerDecisionArr[2] = winnerDecisionMultiArr[2].reduce((previousValue, currentValue) => previousValue + currentValue);
+    winnerDecisionArr[3] = winnerDecisionMultiArr[0][0] + winnerDecisionMultiArr[1][0] + winnerDecisionMultiArr[2][0];
+    winnerDecisionArr[4] = winnerDecisionMultiArr[0][1] + winnerDecisionMultiArr[1][1] + winnerDecisionMultiArr[2][1];
+    winnerDecisionArr[5] = winnerDecisionMultiArr[0][2] + winnerDecisionMultiArr[1][2] + winnerDecisionMultiArr[2][2];
+    winnerDecisionArr[6] = winnerDecisionMultiArr[0][0] + winnerDecisionMultiArr[1][1] + winnerDecisionMultiArr[2][2];
+    winnerDecisionArr[7] = winnerDecisionMultiArr[0][2] + winnerDecisionMultiArr[1][1] + winnerDecisionMultiArr[2][0];
 
-    const winnerDecisionSumArr = [row1Sum, row2Sum, col1Sum, col2Sum, col3Sum, topLeftFromBottomRightSum, topRightFromBottomLeftSum];
-
-    if (winnerDecisionSumArr.find(element => element === 3)) {
+    if (winnerDecisionArr.find(element => element === rowXY * playFirstPlayerNum)) {
+        turnPlayerDisplay.style.display = 'none';
         information.innerHTML = `${playFirstPlayer}様の勝利です。`;
-        btnHighlight(winnerDecisionSumArr);
+        btnHighlight(winnerDecisionArr);
         restartBtnDisplay(playFirstPlayer, playSecondPlayer);
 
-    } else if (winnerDecisionSumArr.find(element => element === 30)) {
+    } else if (winnerDecisionArr.find(element => element === rowXY * playSecondPlayerNum)) {
+        turnPlayerDisplay.style.display = 'none';
         information.innerHTML = `${playSecondPlayer}様の勝利です。`;
-        btnHighlight(winnerDecisionSumArr);
+        btnHighlight(winnerDecisionArr);
+        restartBtnDisplay(playFirstPlayer, playSecondPlayer);
+
+    } else if (btnPushCounter === rowXY ** 2) {
+        turnPlayerDisplay.style.display = 'none';
+        information.innerHTML = "引き分けです";
         restartBtnDisplay(playFirstPlayer, playSecondPlayer);
     }
 }
+
 
 const btnHighlight = (winnerDecisionSumArr) => {
     if (winnerDecisionSumArr[0] === 3 || winnerDecisionSumArr[0] === 30) {
@@ -142,7 +157,7 @@ const btnHighlight = (winnerDecisionSumArr) => {
     }
 }
 
-
+//リスタートボタンを押した時の処理
 const restartBtnDisplay = (playFirstPlayer, playSecondPlayer) => {
     const restartBtnContainer = document.getElementById('restart-btn-container');
 
@@ -158,7 +173,6 @@ const restartBtnDisplay = (playFirstPlayer, playSecondPlayer) => {
             }
             information.innerHTML = '';
             restartBtnContainer.style.display = 'none';
-
             decidePlayFirst(playFirstPlayer, playSecondPlayer);
         }
     })
