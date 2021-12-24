@@ -7,7 +7,6 @@ const rowXY = 3;
 const playFirstPlayerNum = 1;
 const playSecondPlayerNum = 10;
 let btnPushCounter = 0;
-
 let winnerDecisionMultiArr = [
     [0, 0, 0],
     [0, 0, 0],
@@ -89,9 +88,8 @@ const createBtn = (playFirstPlayer, playSecondPlayer) => {
                     information.style.color = "red";
 
                 } else if (turnPlayer === playFirstPlayer) {
-                    information.innerHTML = '';
+                    information.innerHTML = "";
                     information.style.color = "";
-
                     btn.innerHTML = "O";
                     turnPlayer = playSecondPlayer;
                     turnPlayerDisplay.innerHTML = `${playSecondPlayer}様のターンです。`;
@@ -100,9 +98,8 @@ const createBtn = (playFirstPlayer, playSecondPlayer) => {
                     winnerDecision(playFirstPlayer, playSecondPlayer);
 
                 } else if (turnPlayer === playSecondPlayer) {
-                    information.innerHTML = '';
+                    information.innerHTML = "";
                     information.style.color = "";
-
                     btn.innerHTML = "X";
                     turnPlayer = playFirstPlayer;
                     turnPlayerDisplay.innerHTML = `${playFirstPlayer}様のターンです。`;
@@ -134,13 +131,11 @@ const winnerDecision = (playFirstPlayer, playSecondPlayer) => {
     if (winnerDecisionArr.find(element => element === rowXY * playFirstPlayerNum)) {
         turnPlayerDisplay.style.display = 'none';
         information.innerHTML = `${playFirstPlayer}様の勝利です。`;
-        btnHighlight(winnerDecisionArr);
         restartBtnDisplay(playFirstPlayer, playSecondPlayer);
 
     } else if (winnerDecisionArr.find(element => element === rowXY * playSecondPlayerNum)) {
         turnPlayerDisplay.style.display = 'none';
         information.innerHTML = `${playSecondPlayer}様の勝利です。`;
-        btnHighlight(winnerDecisionArr);
         restartBtnDisplay(playFirstPlayer, playSecondPlayer);
 
     } else if (btnPushCounter === rowXY ** 2) {
@@ -150,19 +145,11 @@ const winnerDecision = (playFirstPlayer, playSecondPlayer) => {
     }
 }
 
-
-const btnHighlight = (winnerDecisionSumArr) => {
-    if (winnerDecisionSumArr[0] === 3 || winnerDecisionSumArr[0] === 30) {
-
-    }
-}
-
 //リスタートボタンを押した時の処理
 const restartBtnDisplay = (playFirstPlayer, playSecondPlayer) => {
     const restartBtnContainer = document.getElementById('restart-btn-container');
 
     restartBtnContainer.style.display = 'block';
-
     document.getElementById('restart-btn').addEventListener('click', () => {
         if (document.getElementById('rename').checked) {
             location.reload();
