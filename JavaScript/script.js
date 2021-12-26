@@ -6,12 +6,6 @@ const information = document.getElementById('information');
 const rowXY = 3;
 const playFirstPlayerNum = 1;
 const playSecondPlayerNum = 10;
-let btnPushCounter = 0;
-let winnerDecisionMultiArr = [
-    [0, 0, 0],
-    [0, 0, 0],
-    [0, 0, 0]
-];
 
 //プレイヤーの名前を取得する関数
 document.getElementById("game-start-btn").addEventListener('click', () => {
@@ -44,12 +38,7 @@ document.getElementById("game-start-btn").addEventListener('click', () => {
 const decidePlayFirst = (playerAName, playerBName) => {
     document.getElementById('players-name-add-form').style.display = 'none';
     document.getElementById('game-area').style.display = 'block';
-    winnerDecisionMultiArr = [
-        [0, 0, 0],
-        [0, 0, 0],
-        [0, 0, 0]
-    ];
-
+   
     const players = [playerAName, playerBName];
     const playFirstPlayer = players[Math.floor(Math.random() * players.length)];
     const playSecondPlayer = players.find(n => n !== playFirstPlayer);
@@ -63,6 +52,12 @@ const decidePlayFirst = (playerAName, playerBName) => {
 //セル内にボタンを作成する処理
 const createBtn = (playFirstPlayer, playSecondPlayer) => {
     let turnPlayer = playFirstPlayer;
+    let btnPushCounter = 0;
+    let winnerDecisionMultiArr = [
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0]
+    ];
 
     for (let i = 0; i < rowXY; i++) {
         const tr = document.createElement('tr');
@@ -95,7 +90,7 @@ const createBtn = (playFirstPlayer, playSecondPlayer) => {
                     turnPlayerDisplay.innerHTML = `${playSecondPlayer}様のターンです。`;
                     winnerDecisionMultiArr[i][j] = playFirstPlayerNum;
                     btnPushCounter++;
-                    winnerDecision(playFirstPlayer, playSecondPlayer);
+                    winnerDecision(playFirstPlayer, playSecondPlayer, btnPushCounter, winnerDecisionMultiArr);
 
                 } else if (turnPlayer === playSecondPlayer) {
                     information.innerHTML = "";
@@ -105,7 +100,7 @@ const createBtn = (playFirstPlayer, playSecondPlayer) => {
                     turnPlayerDisplay.innerHTML = `${playFirstPlayer}様のターンです。`;
                     winnerDecisionMultiArr[i][j] = playSecondPlayerNum;
                     btnPushCounter++;
-                    winnerDecision(playFirstPlayer, playSecondPlayer);
+                    winnerDecision(playFirstPlayer, playSecondPlayer, btnPushCounter, winnerDecisionMultiArr);
                 }
             })
         }
@@ -113,7 +108,7 @@ const createBtn = (playFirstPlayer, playSecondPlayer) => {
 }
 
 //勝者の判定
-const winnerDecision = (playFirstPlayer, playSecondPlayer) => {
+const winnerDecision = (playFirstPlayer, playSecondPlayer, btnPushCounter, winnerDecisionMultiArr) => {
     let row1Sum = 0, row2Sum = 0, row3Sum = 0;
     let col1Sum = 0, col2Sum = 0, col3Sum = 0;
     let topLeftFromBottomRightSum = 0, topRightFromBottomLeftSum = 0;
